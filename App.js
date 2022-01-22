@@ -1,8 +1,15 @@
+import 'react-native-gesture-handler';
 import React from 'react';
-import {Text, Image, View, StyleSheet, Button, ImageBackground} from 'react-native';
+import {
+  Text,
+  Image,
+  View,
+  StyleSheet,
+  Button,
+  ImageBackground,
+} from 'react-native';
 import TinderCard from './src/components/TinderCard';
 import users from './assets/data/users';
-
 
 const App = () => {
   return (
@@ -19,7 +26,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
- 
 });
 
 export default App;
