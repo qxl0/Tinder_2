@@ -1,16 +1,13 @@
 import React from 'react';
 import {Text, Image, View, StyleSheet, Button, ImageBackground} from 'react-native';
 import TinderCard from './src/components/TinderCard';
+import users from './assets/data/users';
 
-const Kathy = {
-  name: 'Kathy Smith',
-  bio: 'designer',
-  image: 'https://geeksoncoffee.com/wp-content/uploads/2020/07/Sylvie-Meis-sexy-look.jpeg',
-}
+
 const App = () => {
   return (
     <View style={styles.container}>
-      <TinderCard user={{...Kathy}} />
+      <TinderCard user={users[3]} />
     </View>
   );
 };
