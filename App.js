@@ -8,6 +8,7 @@ import {
   Button,
   ImageBackground,
   Pressable,
+  useWindowDimensions,
 } from 'react-native';
 import TinderCard from './src/components/TinderCard';
 import users from './assets/data/users';
@@ -15,24 +16,49 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  useAnimatedGestureHandler,
+  useDerivedValue,
+  interpolate,
 } from 'react-native-reanimated';
+import {PanGestureHandler} from 'react-native-gesture-handler';
 
 const App = () => {
-  const sharedValue = useSharedValue(1);
-
+  const {width: screenWidth} = useWindowDimensions();
+  const translateX = useSharedValue(1);
+  const rotate = useDerivedValue(
+    () =>
+      interpolate(translateX.value, [-screenWidth, screenWidth], [-60, 60]) +
+      'deg',
+  );
   const cardStyle = useAnimatedStyle(() => ({
-    opacity: sharedValue.value,
+    transform: [
+      {
+        translateX: translateX.value,
+      },
+      {
+        rotate: rotate.value,
+      },
+    ],
   }));
 
+  const gestureHandler = useAnimatedGestureHandler({
+    onStart: (_, context) => {
+      context.startX = translateX.value;
+    },
+    onActive: (event, context) => {
+      translateX.value = context.startX + event.translationX;
+    },
+    onEnd: (event, ctx) => {
+      console.log('Touch ended');
+    },
+  });
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.animatedCard, cardStyle]}>
-        <TinderCard user={users[3]} />
-      </Animated.View>
-      <Pressable
-        onPress={() => (sharedValue.value = withSpring(Math.random()))}>
-        <Text>Change Value</Text>
-      </Pressable>
+      <PanGestureHandler onGestureEvent={gestureHandler}>
+        <Animated.View style={[styles.animatedCard, cardStyle]}>
+          <TinderCard user={users[3]} />
+        </Animated.View>
+      </PanGestureHandler>
     </View>
   );
 };
